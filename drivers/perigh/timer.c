@@ -6,7 +6,6 @@
 #include "ahrs.h"
 
 ahrs_t ahrs;
-int led_flag = 1;    // 1 -> led on,  0 -> led off
 float accel_lpf[3], gyro_lpf[3];
 
 /*
@@ -37,12 +36,8 @@ void timer2_init(void)
 }
 
 void TIM2_IRQHandler(void){
-	static int cnt = 0;
-    	char str[1000] = {};
     	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET){
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-		//sprintf(str, "%d: ", cnt++);
-    	    	uart3_puts(str);
 		mpu6500_int_handler();
 		// debug_print_mpu6500_gyro();
     	}
@@ -55,6 +50,7 @@ void TIM2_IRQHandler(void){
 void timer3_init(void)
 {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+
 	/* (42MHz -> interface clock) * 2 / (8400 -> period * 25 -> prescaler) = 400Hz */
 	TIM_TimeBaseInitTypeDef TimeBaseInitStruct = {
 		.TIM_Period = 8400 - 1,
@@ -75,11 +71,7 @@ void timer3_init(void)
 }
 
 void TIM3_IRQHandler(void){
-	static int cnt = 0;
-	char str[1000] = {};
 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET){
-		//GPIO_WriteBit(GPIOD, GPIO_Pin_12, led_flag);
-		//led_flag = 1 - led_flag;
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 		mpu6500_get_filtered_accel(accel_lpf);
 		mpu6500_get_filtered_gyro(gyro_lpf);
@@ -94,6 +86,7 @@ void TIM3_IRQHandler(void){
 void timer5_init(void)
 {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
+
 	/* (42MHz -> interface clock) * 2 / (84000 -> period * 125 -> prescaler) = 8Hz */
 	TIM_TimeBaseInitTypeDef TimeBaseInitStruct = {
 		.TIM_Period = 84000 - 1,
@@ -118,9 +111,7 @@ void TIM5_IRQHandler(void){
     	char str[1000] = {};
     	if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET){
 		TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
-    	    	sprintf(str, "%d: ", cnt++);
-    	    	uart3_puts(str);
-		sprintf(str, "ahrs   roll: %f, pitch: %f, yaw: %f\n\r", ahrs.attitude.roll, ahrs.attitude.pitch, ahrs.attitude.yaw);
+		sprintf(str, "[ahrs %d]  roll: %f, pitch: %f, yaw: %f\n\r", cnt++,ahrs.attitude.roll, ahrs.attitude.pitch, ahrs.attitude.yaw);
 		uart3_puts(str);
     	}
 }

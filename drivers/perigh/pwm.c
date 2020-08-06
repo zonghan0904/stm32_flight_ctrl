@@ -1,6 +1,7 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_conf.h"
 #include "pwm.h"
+
 void pwm_init()
 {
 	/* RCC initialization */
@@ -9,12 +10,10 @@ void pwm_init()
 
 	GPIO_PinAFConfig(GPIOD, GPIO_PinSource12, GPIO_AF_TIM4);
         GPIO_PinAFConfig(GPIOD, GPIO_PinSource13, GPIO_AF_TIM4);
-        /*GPIO_PinAFConfig(GPIOD, GPIO_PinSource14, GPIO_AF_TIM4);
-        GPIO_PinAFConfig(GPIOD, GPIO_PinSource15, GPIO_AF_TIM4);*/
 
 	/* GPIO initialization */
 	GPIO_InitTypeDef GPIO_InitStruct = {
-		.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 /*| GPIO_Pin_14 | GPIO_Pin_15*/,
+		.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13,
 		.GPIO_Mode = GPIO_Mode_AF,
 		.GPIO_Speed = GPIO_Speed_100MHz,
 		.GPIO_OType =GPIO_OType_PP,
@@ -23,11 +22,12 @@ void pwm_init()
 	GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 	/* Timer initialization */
+	// interface clock(42MHz) * 2 / ( Period(30000) * Prescaler(7) ) = 400Hz
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct = {
 		.TIM_Period = 30000- 1,
 		.TIM_Prescaler = 7 - 1,
 		.TIM_CounterMode = TIM_CounterMode_Up
-	};	
+	};
 	TIM_TimeBaseInit(TIM4, &TIM_TimeBaseInitStruct);
 
 	/* PWM output initialization */
@@ -39,9 +39,6 @@ void pwm_init()
 
 	TIM_OC1Init(TIM4, &TIM_OCInitStruct);
         TIM_OC2Init(TIM4, &TIM_OCInitStruct);
-/*
-        TIM_OC3Init(TIM4, &TIM_OCInitStruct);
-        TIM_OC4Init(TIM4, &TIM_OCInitStruct);
-*/
+
 	TIM_Cmd(TIM4, ENABLE);
 }
