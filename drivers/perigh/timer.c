@@ -76,15 +76,15 @@ void timer3_init(void)
 
 void TIM3_IRQHandler(void){
 	static int cnt = 0;
-    	char str[1000] = {};
-    	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET){
-		GPIO_WriteBit(GPIOD, GPIO_Pin_12, led_flag);
-		led_flag = 1 - led_flag;
+	char str[1000] = {};
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET){
+		//GPIO_WriteBit(GPIOD, GPIO_Pin_12, led_flag);
+		//led_flag = 1 - led_flag;
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 		mpu6500_get_filtered_accel(accel_lpf);
 		mpu6500_get_filtered_gyro(gyro_lpf);
 		ahrs_estimate(&ahrs, accel_lpf, gyro_lpf);
-    	}
+	}
 }
 
 /*

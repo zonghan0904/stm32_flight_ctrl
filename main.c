@@ -9,6 +9,8 @@
 #include "ahrs.h"
 #include "madgwick_ahrs.h"
 #include "stm32f4xx_conf.h"
+#include "pwm.h"
+#include "motor.h"
 
 imu_t imu;
 
@@ -33,6 +35,8 @@ void init_GPIO()
 int main()
 {
 	init_GPIO();
+	pwm_init();
+	motor_init();
 	uart3_init();
 	spi1_init();          // imu communication
 	mpu6500_init(&imu);   // mpu6500
@@ -40,7 +44,18 @@ int main()
 	ahrs_init();          // estimator
 	timer3_init();	      // madgwick
 	timer5_init();	      // debug purpose
-
-    	while(1);
+	
+	int motor_speed = 12000;
+	while(1){
+		set_motor_pwm_pulse(MOTOR1,motor_speed);
+		set_motor_pwm_pulse(MOTOR2,motor_speed);
+		motor_speed+=1000;
+		blocked_delay_ms(1000);
+		if(motor_speed>24000){
+			motor_speed = 12000;
+			set_motor_pwm_pulse(MOTOR1,motor_speed);
+			set_motor_pwm_pulse(MOTOR2,motor_speed);
+		}
+	}
 }
 

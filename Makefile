@@ -94,7 +94,9 @@ SRC+=./main.c \
      ./common/se3_math.c \
      ./core/estimators/ahrs.c \
      ./common/matrix.c \
-     ./drivers/perigh/gpio.c
+     ./drivers/perigh/gpio.c \
+     ./drivers/perigh/pwm.c \
+     ./drivers/device/motor.c
 
 #======================================================================#
 #STM32 startup file
