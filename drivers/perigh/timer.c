@@ -44,7 +44,7 @@ void TIM2_IRQHandler(void){
 }
 
 /*
- * TIM3: Madgwick filter
+ * TIM3: Madgwick filter and PID controller
  * Frequency: 400Hz
  */
 void timer3_init(void)
