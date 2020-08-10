@@ -29,15 +29,7 @@ int main()
 	int motor_speed = MOTOR_PULSE_MIN;
 
 	while(1){
-		set_motor_pwm_pulse(MOTOR1, motor_speed);
-		set_motor_pwm_pulse(MOTOR2, motor_speed);
-		motor_speed += 1000;
-		blocked_delay_ms(1000);
-		if(motor_speed > MOTOR_PULSE_MAX){
-			motor_speed = MOTOR_PULSE_MIN;
-			set_motor_pwm_pulse(MOTOR1, motor_speed);
-			set_motor_pwm_pulse(MOTOR2, motor_speed);
-		}
 	}
+	return 0;
 }
 

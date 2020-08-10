@@ -44,6 +44,7 @@ CFLAGS+=-I$(ST_LIB)/inc
 #SOURCE
 CFLAGS+=-I./common
 CFLAGS+=-I./core/estimators
+CFLAGS+=-I./core/controller
 CFLAGS+=-I./drivers/device
 CFLAGS+=-I./drivers/interface
 CFLAGS+=-I./drivers/perigh
@@ -93,6 +94,7 @@ SRC+=./main.c \
      ./common/quaternion.c \
      ./common/se3_math.c \
      ./core/estimators/ahrs.c \
+     ./core/controller/pid_control.c \
      ./common/matrix.c \
      ./drivers/perigh/gpio.c \
      ./drivers/perigh/pwm.c \

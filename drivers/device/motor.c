@@ -21,7 +21,7 @@ void motor_init(void)
 	set_motor_pwm_pulse(MOTOR4, MOTOR_PULSE_MIN);
 	set_motor_pwm_pulse(MOTOR5, MOTOR_PULSE_MIN);
 	set_motor_pwm_pulse(MOTOR6, MOTOR_PULSE_MIN);
-	//blocked_delay_ms(1000);
+	blocked_delay_ms(1000);
 }
 
 void motor_halt(void)

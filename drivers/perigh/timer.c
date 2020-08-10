@@ -4,7 +4,7 @@
 #include "uart.h"
 #include "mpu6500.h"
 #include "ahrs.h"
-
+#include "pid_control.h"
 ahrs_t ahrs;
 float accel_lpf[3], gyro_lpf[3];
 
@@ -76,6 +76,7 @@ void TIM3_IRQHandler(void){
 		mpu6500_get_filtered_accel(accel_lpf);
 		mpu6500_get_filtered_gyro(gyro_lpf);
 		ahrs_estimate(&ahrs, accel_lpf, gyro_lpf);
+		pid_control(ahrs.attitude.roll);
 	}
 }
 
@@ -112,7 +113,7 @@ void TIM5_IRQHandler(void){
     	if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET){
 		TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
 		sprintf(str, "[ahrs %d]  roll: %f, pitch: %f, yaw: %f\n\r", cnt++,ahrs.attitude.roll, ahrs.attitude.pitch, ahrs.attitude.yaw);
-		uart3_puts(str);
+	//	uart3_puts(str);
     	}
 }
 
