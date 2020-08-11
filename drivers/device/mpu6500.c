@@ -20,12 +20,12 @@ mpu6500_t mpu6500 = {
 	.gyro_fs = MPU6500_GYRO_FS_2000_DPS,
 	.calib_mode = false,
 	.init_finished = false,
-	.gx_min = -2004,
-	.gx_max = +2017,
-	.gy_min = -1740,
-	.gy_max = +2420,
-	.gz_min = -2110,
-	.gz_max = +2080
+	.gx_min = -1,
+	.gx_max = +1,
+	.gy_min = -1,
+	.gy_max = +1,
+	.gz_min = -1,
+	.gz_max = +1
 };
 
 static uint8_t mpu6500_read_byte(uint8_t address)
@@ -238,13 +238,9 @@ void mpu6500_int_handler(void)
 	mpu6500_temp_convert_to_scale(&imu_mpu6500->temp_unscaled, &imu_mpu6500->temp_raw);
 
 	/* low pass filtering for accelerometer, gyroscope do not require this process */
-	lpf(imu_mpu6500->accel_raw[0], &(imu_mpu6500->accel_lpf[0]), 0.02);
-	lpf(imu_mpu6500->accel_raw[1], &(imu_mpu6500->accel_lpf[1]), 0.02);
-	lpf(imu_mpu6500->accel_raw[2], &(imu_mpu6500->accel_lpf[2]), 0.02);
-
-	lpf(imu_mpu6500->gyro_raw[0], &(imu_mpu6500->gyro_lpf[0]), 0.03);
-	lpf(imu_mpu6500->gyro_raw[1], &(imu_mpu6500->gyro_lpf[1]), 0.03);
-	lpf(imu_mpu6500->gyro_raw[2], &(imu_mpu6500->gyro_lpf[2]), 0.03);
+	lpf(imu_mpu6500->accel_raw[0], &(imu_mpu6500->accel_lpf[0]), 0.015);
+	lpf(imu_mpu6500->accel_raw[1], &(imu_mpu6500->accel_lpf[1]), 0.015);
+	lpf(imu_mpu6500->accel_raw[2], &(imu_mpu6500->accel_lpf[2]), 0.015);
 	//imu_mpu6500->gyro_lpf[0] = imu_mpu6500->gyro_raw[0];
 	//imu_mpu6500->gyro_lpf[1] = imu_mpu6500->gyro_raw[1];
 	//imu_mpu6500->gyro_lpf[2] = imu_mpu6500->gyro_raw[2];

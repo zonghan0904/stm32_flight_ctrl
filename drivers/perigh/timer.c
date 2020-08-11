@@ -6,7 +6,7 @@
 #include "ahrs.h"
 #include "pid_control.h"
 ahrs_t ahrs;
-float accel_lpf[3], gyro_lpf[3];
+float accel_lpf[3], gyro_raw[3];
 
 /*
  * TIM2: Get IMU data
@@ -74,9 +74,9 @@ void TIM3_IRQHandler(void){
 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET){
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 		mpu6500_get_filtered_accel(accel_lpf);
-		mpu6500_get_filtered_gyro(gyro_lpf);
-		ahrs_estimate(&ahrs, accel_lpf, gyro_lpf);
-		pid_control(ahrs.attitude.roll);
+		mpu6500_get_raw_gyro(gyro_raw);
+		ahrs_estimate(&ahrs, accel_lpf, gyro_raw);
+		pid_control(ahrs.attitude.roll,gyro_raw[0]);
 	}
 }
 
@@ -113,7 +113,7 @@ void TIM5_IRQHandler(void){
     	if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET){
 		TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
 		sprintf(str, "[ahrs %d]  roll: %f, pitch: %f, yaw: %f\n\r", cnt++,ahrs.attitude.roll, ahrs.attitude.pitch, ahrs.attitude.yaw);
-	//	uart3_puts(str);
+		uart3_puts(str);
     	}
 }
 
