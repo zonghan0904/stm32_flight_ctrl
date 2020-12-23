@@ -12,7 +12,7 @@ void uart3_init(void)
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource11, GPIO_AF_USART3);
 
 	GPIO_InitTypeDef GPIO_InitStruct = {
-		.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11,
+		.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11, //TX , RX
 		.GPIO_Mode = GPIO_Mode_AF,
 		.GPIO_Speed = GPIO_Speed_50MHz,
 		.GPIO_OType = GPIO_OType_PP,

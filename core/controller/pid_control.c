@@ -15,30 +15,42 @@
 
 float error_sum = 0;
 float past_error[100] = {0};
-
+int count_print = 0;
 void pid_control(float data,float ang_vel){
-	ang_vel = - ang_vel;
-	float bias = -3.0;
+	ang_vel = - ang_vel;		//angular velocity
+	float bias = 0;				//bias 
 	data -= bias;
-	float ideal = 0;
-	float magic_para = 1.0;
-	float error = 0;
-	float left_signal = 12000;
+	float ideal = 0;			//ideal angle
+	float error = 0;			//error
+	float left_signal = 12000;	
 	float right_signal = 12000;
 
 	// PID control
 	error = ideal - data;
-	left_signal =  12000 + left_Base - magic_para * 1.0 * (error * gain_P + error_sum * gain_I + ang_vel * gain_D);
-	right_signal = 12000 + right_Base + magic_para * 1.0 * (error * gain_P + error_sum * gain_I + ang_vel * gain_D);
-	left_signal < (12000 + right_Base) ? left_signal = (12000 + left_Base) : 1;
-	right_signal < (12000 + left_Base) ? right_signal = (12000 + right_Base) : 1;
+
+
+/** write your code here **/
+	left_signal =  12000 + left_Base + (error * gain_P + error_sum * gain_I + ang_vel * gain_D);
+	right_signal = 12000 + left_Base - (error * gain_P + error_sum * gain_I + ang_vel * gain_D);
+
+
+/**                      **/
+
+
+	left_signal < (12000) ? left_signal = (12000) : 1;
+	right_signal < (12000) ? right_signal = (12000) : 1;
+	left_signal > (24000) ? left_signal = (24000) : 1;
+	right_signal > (24000) ? right_signal = (24000) : 1;
 	set_motor_pwm_pulse(MOTOR1, (int)left_signal);
 	set_motor_pwm_pulse(MOTOR2, (int)right_signal);
-
-	 //char str[1000] = {};
+	count_print++;
+	if(count_print>10){
+	 char str[1000] = {};
 	 //sprintf(str, "[siganl]  l: %f, r: %f, data: %f \n\r", left_signal, right_signal, ang_vel);
-	 //uart3_puts(str);
-
+	 sprintf(str, "[siganl]  data: %f left: %f right: %f\n\r", data ,left_signal,right_signal);
+//	 uart3_puts(str);
+	count_print = 0;
+	}
 	int i;
 	for(i=0;i<99;i++){
 		past_error[i] = past_error[i+1];
